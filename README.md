@@ -5,6 +5,7 @@ Starbound Mod Tester is a simple, portable and effective way for Starbound mod d
 ## Usage
 ### Basic
 Starbound Mod Tester (or SMT, as I will be calling it from now on) can be run with absolutely no arguments, as follows:
+
 `./sbmodtester.sh`
 
 This causes SMT to use the folder named `testing` in the directory SMT is in, builds a mod based on that, and runs Starbound.
