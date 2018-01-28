@@ -1,7 +1,4 @@
 #!/bin/bash
-#---TODO---
-#Figure out how to get the mods to clean up when done with Starbound
-#Graphical interface option
 
 STARBOUND_DIR=$HOME/.local/share/Steam/steamapps/common/Starbound
 HELP=""
