@@ -29,8 +29,9 @@ This will look for the folder `fooA` in the current folder of SMT (`$PWD`). When
 > ./sbmodtester.sh --literal /home/example/path-to-folder/fooA
 
 Both commands will output the same result, assuming that SMT is placed in `/home/example/path-to-folder/`. The advantage to using literal naming is flexibility. For example, you could use a pre-defined variable, or a folder outside of SMT's location, or multiple folders within one folder.
-
-
+#### -c or --cleanup
+This will cleanup all `*.tmp.pak` files created by SMT in the selected Starbound's mod folder. This will be automated in a later update when I can figure out how to not make Starbound stop SMT. Currently, you can automate cleanup with this:
+> ./sbmodtester.sh foo1 foo2 foo3 fooN ; ./sbmodtester.sh -c
 
 ## Extra Remarks
 This version is being built for the intent of being run on Linux with the bash shell. Anyone who wishes to make a Windows/macOS (It may work with minimal edits on macOS, seeing as it also uses the bash shell) branch may do so, as I have no knowledge or intention of doing so.
