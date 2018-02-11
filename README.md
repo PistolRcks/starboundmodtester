@@ -22,6 +22,8 @@ Note that if a folder doesn't exist, SMT will stop the entire build operation an
 
 ### Arguments
 SMT takes optional arguments before build targets. All arguments are as follows:
+#### -c or --cleanup
+Forces a cleanup all of `*.tmp.pak` files created by SMT in the selected Starbound's mod folder.
 #### -h or --help
 Shows a simple help dialogue.
 #### -l or --literal
@@ -34,12 +36,12 @@ This will look for the folder `fooA` in the current folder of SMT (`$PWD`). When
 `./sbmodtester.sh --literal /home/example/path-to-folder/fooA`
 
 Both commands will output the same result, assuming that SMT is placed in `/home/example/path-to-folder/`. The advantage to using literal naming is flexibility. For example, you could use a pre-defined variable, or a folder outside of SMT's location, or multiple folders within one folder.
-#### -c or --cleanup
-This will cleanup all `*.tmp.pak` files created by SMT in the selected Starbound's mod folder. This will be automated in a later update when I can figure out how to not make Starbound stop SMT. Currently, you can automate cleanup with this:
-
-`./sbmodtester.sh foo1 foo2 foo3 fooN ; ./sbmodtester.sh -c`
+#### -s or --skip-build
+Skips the build phase and goes straight to starting Starbound.
+#### -w or --enable-workshop-mods
+Copys over Steam Workshop mods to your Starbound mod folder. Note that this is only applicable if you have Starbound on Steam. However, if you are using a non-Steam Starbound and wish to use Workshop mods, this will also work.
 
 ## Extra Remarks
 This version is being built for the intent of being run on Linux with the bash shell. Anyone who wishes to make a Windows/macOS (It may work with minimal edits on macOS, seeing as it also uses the bash shell) branch may do so, as I have no knowledge or intention of doing so.
 
-NOTE: The mod does NOT load Starbound through Steam, so all Workshop mods will not be loaded. However, this does allow for usage on platforms other than Steam, such as GOG.
+NOTE: The mod does NOT load Starbound through Steam, so all Workshop mods will only be loaded if you use `-w` or `--enable-workshop-mods`. However, this does allow for usage on platforms other than Steam, such as GOG. 
