@@ -1,45 +1,65 @@
 #!/bin/bash
 #---TODO---
 #Graphical interface option
+#Version checks and updating from Git
 
-STARBOUND_DIR=$HOME/.local/share/Steam/steamapps/common/Starbound
+STEAM_DIR="$HOME/.local/share/Steam"
+STARBOUND_DIR="$HOME/.local/share/Steam/steamapps/common/Starbound"
 HELP=""
 LITERAL=""
 CLEANUP=""
+NO_CLEANUP=""
+SERVER_MODE=""
 SELECT_DIR=()
 TITLE="\033[0;92m[SBMT]\033[0m:"
 ERR_HELP="${TITLE} Need help? Use --help or -h."
-VER="0.4"
+VER="0.4.2"
 
 sbbuild () {
     #The real secret sauce -- the mod building script
     if [ "$LITERAL" == "literal" ]
         then
-            local LIT_SELECT_DIR=$(basename "$1")
-            cd $STARBOUND_DIR/linux
-            rm -rf $STARBOUND_DIR/mods/$LIT_SELECT_DIR.tmp.pak
-            ./asset_packer $1 $STARBOUND_DIR/mods/$LIT_SELECT_DIR.tmp.pak
-            cd $OLDPWD
+            local lit_select_dir=$(basename "$1")
+            cd "$STARBOUND_DIR/linux"
+            rm -rf "$STARBOUND_DIR/mods/$lit_select_dir.tmp.pak"
+            ./asset_packer "$1" "$STARBOUND_DIR/mods/$lit_select_dir.tmp.pak"
+            cd "$OLDPWD"
     else
-        cd $STARBOUND_DIR/linux
-        rm -rf $STARBOUND_DIR/mods/$1.tmp.pak
-        ./asset_packer $OLDPWD/$1 $STARBOUND_DIR/mods/$1.tmp.pak
-        cd $OLDPWD
+        cd "$STARBOUND_DIR/linux"
+        rm -rf "$STARBOUND_DIR/mods/$1.tmp.pak"
+        ./asset_packer "$OLDPWD/$1" "$STARBOUND_DIR/mods/$1.tmp.pak"
+        cd "$OLDPWD"
     fi
     if [ "${!#}" == "run" ]
         then
-            printf "${TITLE} Last mod '$1' built. Launching Starbound.\n"
-            /$STARBOUND_DIR/linux/run-client.sh
+            printf "${TITLE} Last mod '$1' built. Launching Starbound"
+            if [ "$SERVER_MODE" == "server_mode" ]
+                then
+                    printf " in dedicated server mode.\n"
+                    "$STARBOUND_DIR/linux/run-server.sh"
+            else
+                printf ".\n"
+                "$STARBOUND_DIR/linux/run-client.sh"
+            fi
     else
         printf "${TITLE} Mod '$1' built. Continuing.\n"
     fi
 }
 
 cleanup () {
-    cd $STARBOUND_DIR/mods
-    rm -rf *.tmp.pak
-    cd $OLDPWD
-    printf "${TITLE} All cleaned up! Removed all *.tmp.pak files from your mod folder.\n"
+    if [ "$SERVER_MODE" == "server_mode" ]
+        then
+            printf "${TITLE} Dedicated server mode on. Not cleaning up."
+    #Ok, so maybe I should deprecate the "NO_CLEANUP" variable...
+    elif [ "$NO_CLEANUP" == "no_cleanup"]
+        then
+            printf "${TITLE} 'No cleanup' mode on. Not cleaning up."
+    else
+        cd "$STARBOUND_DIR/mods"
+        rm -rf *.tmp.pak
+        cd "$OLDPWD"
+        printf "${TITLE} All cleaned up! Removed all *.tmp.pak files from your mod folder.\n"
+    fi
 }
 
 showhelp () {
@@ -47,13 +67,17 @@ showhelp () {
 Usage: ./sbmodtester.sh [ARGUMENTS] [TARGET FOLDER NAME(S)]\n
 ---ARGUMENTS---
     -c | --cleanup
-        Forces a cleanup. This deletes all *.tmp.pak files from Starbound's mod folder.
+        Forces a cleanup. This deletes all *.tmp.pak files from Starbound's mod folder and is run automatically after closing Starbound client-side.
     -h | --help
         Displays this help message.
     -l | --literal
         Initiates literal mode. Literal mode changes the folder target from its name to its location (See EXTRA NOTES).
-    -s | --skip-build
+    -nb | --no-build
         Skips all mod building and runs Starbound.
+    -nc | --no-cleanup
+        Turns off mod cleanup after Starbound is finished. This is automatically applied when using the argument '--server.'
+    --server
+        Runs Starbound's dedicated server instead of client-side. When server mode is on, SBMT does not autocleanup.
     -w | --enable-workshop-mods
         Copys over workshop mods to the Starbound mod folder. This only applies if you have the Steam version of Starbound installed.
 
@@ -64,26 +88,36 @@ This is cancelled if the argument '--literal' is called. \n
 Using a directory other than Steam's installation folder? Just use 'export' to change the location of 'STARBOUND_DIR' to whatever suits you!\n"
 }
 
-#Argument parsing
+#--Argument Parsing--
 while [[ $# -gt 0 ]]
     do
         case $1 in
             -c | --cleanup )
-                cleanup
                 CLEANUP="cleanup"
+                NO_CLEANUP=""
+                cleanup
                 break
                 ;;
             -h | --help )
-                showhelp
                 HELP="help"
+                showhelp
                 break
                 ;;
             -l | --literal )
                 LITERAL="literal"
                 shift
                 ;;
-            -s | --skip-build )
-                SKIP_BUILD="skip_build"
+            -nb | --no-build )
+                NO_BUILD="no_build"
+                shift
+                ;;
+            -nc | --no-cleanup )
+                NO_CLEANUP="no_cleanup"
+                CLEANUP=""
+                shift
+                ;;
+            --server )
+                SERVER_MODE="server_mode"
                 shift
                 ;;
             -w | --enable-workshop-mods )
@@ -97,59 +131,69 @@ while [[ $# -gt 0 ]]
         esac
 done
 
-#Workshop mod loading
+#--Workshop Mod Loading--
 if [ "$WORKSHOP_MODS" == "workshop_mods" ]
     then
         working_folder=$PWD
         modfolders=()
         printf "${TITLE} Initiating workshop mod copying...\n"
-        cd $HOME/.local/share/Steam/steamapps/workshop/content/211820
-        mapfile -t modfolders < <( ls $HOME/.local/share/Steam/steamapps/workshop/content/211820 )
+        cd "$STEAM_DIR/steamapps/workshop/content/211820"
+        mapfile -t modfolders < <( ls "$STEAM_DIR/steamapps/workshop/content/211820" )
         for (( i = 0; i < ${#modfolders[@]} ; i++ )); do
             #Check if a mod's folder is empty. If so, skip.
             if [ -z "$(ls -A ${modfolders[i]})" ] && [ -d "${modfolders[i]}" ]
                 then
                     printf "${TITLE} [$(( i+1 ))/${#modfolders[@]}] Steam mod folder with ID '${modfolders[i]}' is empty. Skipping.\n"
             else
-                cd ${modfolders[i]}
-                cp "contents.pak" "$STARBOUND_DIR/mods/wsmod_${modfolders[i]}.tmp.pak"
+                cd "${modfolders[i]}"
+                cp *.pak "$STARBOUND_DIR/mods/wsmod_${modfolders[i]}.tmp.pak"
                 cd ..
                 printf "${TITLE} [$(( i+1 ))/${#modfolders[@]}] Steam mod with ID '${modfolders[i]}' successfully copyed. Moving on.\n"
             fi
         done
-        cd $working_folder
-        printf "${TITLE} All mods successfully initiated. Moving on to build phase.\n"
+        cd "$working_folder"
+        printf "${TITLE} All mods successfully initialized. Moving on to build phase.\n"
 fi
 
 #Save the number of directories chosen
 NUMDIR=${#SELECT_DIR[@]}
 
-#Check if user passes nothing, and the "testing" directory exists. If so, run.
-if [ -d "$PWD/testing" ] && [ -z "$SELECT_DIR" ]
+#--Build Phase--
+#NOTE: Build skip goes first so that it takes priority.
+if [ "$NO_BUILD" == "no_build" ]
     then
-        sbbuild $PWD/testing run ; cleanup
+        printf "${TITLE} Skipping build phase. Launching Starbound"
+        if [ "$SERVER_MODE" == "server_mode" ]
+            then
+                printf " in dedicated server mode.\n"
+                "$STARBOUND_DIR/linux/run-server.sh"
+        else
+            printf ".\n"
+            "$STARBOUND_DIR/linux/run-client.sh" ; cleanup
+        fi
+#Check if user passes nothing, and the "testing" directory exists. If so, run.
+elif [ -d "$PWD/testing" ] && [ -z "$SELECT_DIR" ]
+    then
+        printf "${TITLE} Initiating build phase...\n"
+        sbbuild "$PWD/testing" run ; cleanup
 #Check if user passed something for a directory. If so, run all arguments in sequential order.
 elif [ ! -z "$SELECT_DIR" ]
     then
-        printf "${TITLE} Initiating build phase..."
+        printf "${TITLE} Initiating build phase...\n"
         for (( i = 0; i < ${NUMDIR}; i++ )); do
             if [ $i == $(( NUMDIR-1 )) ] && [ -d "${SELECT_DIR[$i]}" ]
                 then
                     printf "${TITLE} Starting build number $(( i+1 )) out of ${NUMDIR}.\n"
-                    sbbuild ${SELECT_DIR[$i]} run ; cleanup
+                    sbbuild "${SELECT_DIR[$i]}" run ; cleanup
             elif [ ! -d "${SELECT_DIR[$i]}" ]
                 then
                     printf "${TITLE} ERROR: Folder '${SELECT_DIR[$i]}' in parent directory '${PWD}' doesn't exist. Stopping and cleaning up mods.\n${ERR_HELP} \n" ; cleanup
                     break
             else
                 printf "${TITLE} Starting build number $(( i+1 )) out of ${NUMDIR}.\n"
-                sbbuild ${SELECT_DIR[$i]}
+                sbbuild "${SELECT_DIR[$i]}"
             fi
         done
-elif [ "${SKIP_BUILD}" == "skip_build" ]
-    then
-        printf "${TITLE} Skipping build phase. Launching Starbound.\n"
-        /$STARBOUND_DIR/linux/run-client.sh ; cleanup
 elif [ ! -d "$PWD/testing" ] && [ "$HELP" != "help" ] && [ "$CLEANUP" != "cleanup" ]
     then
         printf "${TITLE} ERROR: Child folder 'testing' in parent directory '${PWD}' not found since folder argument not passed.\n${ERR_HELP} \n"
