@@ -45,7 +45,7 @@ Starts Starbound in a dedicated server. "--no-cleanup" is automatically applied 
 #### -w or --enable-workshop-mods
 Copys over Steam Workshop mods to your Starbound mod folder. Note that this is only applicable if you have Starbound on Steam. However, if you are using a non-Steam Starbound and wish to use Workshop mods, this will also work.
 
-## Extra Remarksuseful, non-development 
+## Extra Remarks
 This version is being built for the intent of being run on Linux with the bash shell. Anyone who wishes to make a Windows/macOS (It may work with minimal edits on macOS, seeing as it also uses the bash shell) branch may do so, as I have no knowledge or intention of doing so.
 
 NOTE: The mod does NOT load Starbound through Steam, so all Workshop mods will only be loaded if you use `-w` or `--enable-workshop-mods`. However, this does allow for usage on platforms other than Steam, such as GOG. 
