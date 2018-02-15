@@ -53,4 +53,4 @@ This version is being built for the intent of being run on Linux with the bash s
 If you have a different Steam folder and/or Starbound folder that you use for Starbound, you can change the STEAM_DIR and STARBOUND_DIR variables at the beginning of the script to the root folder of each respective location. The location doesn't require slash escapes, and might actually break if you use them (e.g. `STEAM_DIR="/games/path to games/steam games"`, not `STEAM_DIR="/games/path\ to\ games/steam\ games"`. Oh yeah, and keep the quotes. They're needed so everything doesn't break (thanks bug #2).
 
 ### Final Note
-NOTE: The mod does NOT load Starbound through Steam, so all Workshop mods will only be loaded if you use `-w` or `--enable-workshop-mods`. However, this does allow for usage on platforms other than Steam, such as GOG. 
+The mod does NOT load Starbound through Steam, so all Workshop mods will only be loaded if you use `-w` or `--enable-workshop-mods`. However, this does allow for usage on platforms other than Steam, such as GOG. 
