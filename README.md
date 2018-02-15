@@ -46,6 +46,11 @@ Starts Starbound in a dedicated server. "--no-cleanup" is automatically applied 
 Copys over Steam Workshop mods to your Starbound mod folder. Note that this is only applicable if you have Starbound on Steam. However, if you are using a non-Steam Starbound and wish to use Workshop mods, this will also work.
 
 ## Extra Remarks
-This version is being built for the intent of being run on Linux with the bash shell. Anyone who wishes to make a Windows/macOS (It may work with minimal edits on macOS, seeing as it also uses the bash shell) branch may do so, as I have no knowledge or intention of doing so.
+### Non-Linux Versions
+This version is being built for the intent of being run on Linux with the bash shell. Anyone who wishes to make a Windows (macOS support is in the works) branch may do so, as I have no knowledge or intention of doing so.
 
+### Using Folders Other Than Defaults
+If you have a different Steam folder and/or Starbound folder that you use for Starbound, you can change the STEAM_DIR and STARBOUND_DIR variables at the beginning of the script to the root folder of each respective location. The location doesn't require slash escapes, and might actually break if you use them (e.g. `STEAM_DIR="/games/path to games/steam games"`, not `STEAM_DIR="/games/path\ to\ games/steam\ games"`. Oh yeah, and keep the quotes. They're needed so everything doesn't break (thanks bug #2).
+
+### Final Note
 NOTE: The mod does NOT load Starbound through Steam, so all Workshop mods will only be loaded if you use `-w` or `--enable-workshop-mods`. However, this does allow for usage on platforms other than Steam, such as GOG. 
