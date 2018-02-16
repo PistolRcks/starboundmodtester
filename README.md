@@ -24,6 +24,10 @@ Note that if a folder doesn't exist, SMT will stop the entire build operation an
 SMT takes optional arguments before build targets. All arguments are as follows:
 #### -c or --cleanup
 Forces a cleanup all of `*.tmp.pak` files created by SMT in the selected Starbound's mod folder.
+#### --force-starbound
+Forces the Starbound directory to whatever comes after it. If you use `linux_default`, it will use the default Linux Steam Starbound installation directory.
+#### --force-steam
+Forces the Steam directory to whatever comes after it. Similarly to `--force-starbound`, if you use `linux_default`, it will use the default Linux Steam installation directory.
 #### -h or --help
 Shows a simple help dialogue.
 #### -l or --literal
@@ -49,8 +53,8 @@ Copys over Steam Workshop mods to your Starbound mod folder. Note that this is o
 ### Non-Linux Versions
 This version is being built for the intent of being run on Linux with the bash shell. Anyone who wishes to make a Windows (macOS support is in the works) branch may do so, as I have no knowledge or intention of doing so.
 
-### Using Folders Other Than Defaults
-If you have a different Steam folder and/or Starbound folder that you use for Starbound, you can change the STEAM_DIR and STARBOUND_DIR variables at the beginning of the script to the root folder of each respective location. The location doesn't require slash escapes, and might actually break if you use them (e.g. `STEAM_DIR="/games/path to games/steam games"`, not `STEAM_DIR="/games/path\ to\ games/steam\ games"`). Oh yeah, and keep the quotes. They're needed so everything doesn't break (thanks bug #2).
+### Changing Folder Defaults
+If want to use a different Steam folder and/or Starbound folder by default, you can change the STEAM_DIR and STARBOUND_DIR variables at the beginning of the script to the root folder of each respective location. The location doesn't require slash escapes, and might actually break if you use them (e.g. `STEAM_DIR="/games/path to games/steam games"`, not `STEAM_DIR="/games/path\ to\ games/steam\ games"`). Oh yeah, and keep the quotes. They're needed so everything doesn't break (thanks bug #2).
 
 ### Final Note
 The mod does NOT load Starbound through Steam, so all Workshop mods will only be loaded if you use `-w` or `--enable-workshop-mods`. However, this does allow for usage on platforms other than Steam, such as GOG. 
