@@ -18,7 +18,7 @@ This can also be run with multiple folders. SMT interprets and builds each folde
 
 `./sbmodtester.sh foo1 foo2 foo3`
 
-Note that if a folder doesn't exist, SMT will stop the entire build operation and clean up all folders.
+Note that if a folder doesn't exist, SMT will stop the entire build operation and clean up the `mod` folder.
 
 ### Arguments
 SMT takes optional arguments before build targets. All arguments are as follows:
