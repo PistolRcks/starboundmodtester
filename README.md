@@ -18,15 +18,15 @@ This can also be run with multiple folders. SMT interprets and builds each folde
 
 `./sbmodtester.sh foo1 foo2 foo3`
 
-Note that if a folder doesn't exist, SMT will stop the entire build operation and clean up the `mod` folder.
+Note that if a folder doesn't exist, SMT will stop the entire build operation and clean up the `mod` folder in the specified Starbound root directory
 
 ### Arguments
 SMT takes optional arguments before build targets. All arguments are as follows:
 #### -c or --cleanup
 Forces a cleanup all of `*.tmp.pak` files created by SMT in the selected Starbound's mod folder.
-#### --force-starbound
+#### --force-starbound [STARBOUND_ROOT_DIR]
 Forces the Starbound directory to whatever comes after it. If you use `linux_default`, it will use the default Linux Steam Starbound installation directory.
-#### --force-steam
+#### --force-steam [STEAM_ROOT_DIR]
 Forces the Steam directory to whatever comes after it. Similarly to `--force-starbound`, if you use `linux_default`, it will use the default Linux Steam installation directory.
 #### -h or --help
 Shows a simple help dialogue.
