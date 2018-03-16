@@ -15,7 +15,7 @@ SERVER_MODE=""
 SELECT_DIR=()
 TITLE="\033[0;92m[SBMT]\033[0m:"
 ERR_HELP="${TITLE} Need help? Use --help or -h."
-VER="0.5"
+VER="0.5.0.1"
 
 updatefromgit () {
     local git_ver=$( wget -q -O - https://raw.githubusercontent.com/PistolRcks/starboundmodtester/master/VERSION )
@@ -54,7 +54,7 @@ updatefromgit () {
                 break
             fi
         else
-            printf "${TITLE} Local version matches Github version. You are already up to date!"
+            printf "${TITLE} Local version matches Github version. You are already up to date!\n"
         fi
     fi
 }
