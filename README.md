@@ -44,6 +44,8 @@ Both commands will output the same result, assuming that SMT is placed in `/home
 Skips the build phase and goes straight to starting Starbound.
 #### -nc or --no-cleanup
 Turns off auto mod cleanup after Starbound is closed.
+#### -nv or --no-version-check
+As of update 0.5.1, SMT will automatically check for updates after every time it is run (provided the user is connected to the internet). This argument stops this from happening.
 #### --server
 Starts Starbound in a dedicated server. "--no-cleanup" is automatically applied when this is on.
 #### -u or --update

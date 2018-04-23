@@ -1,3 +1,19 @@
+## 0.5.1
+### What's New?
++ Added a changelog viewer to the update function, complete with Markdown support! This was the hardest thing to do.
++ Added automatic version checking at the end of running SMT. You can turn this off with the `--no-version-check` argument.
++ Added a message when downloading the version number from Github
++ Added an error message if the user inputs an incorrect argument
++ Added extra error messages and sanity checks
+
+### What's Changed?
+* Rewrote the main portion of the build function
+* Changed formatting on the help message to make it look nicer on an 80 character width terminal
+* Changed tab length to two instead of four to lower filesize
+
+### What's Fixed?
+* Fixed a potential problem where if the user had changed the name of sbmodtester.sh to a name with spaces, updating would target an incorrect file
+
 ## 0.5
 ### What's New?
 + Update from Github with the new `--update` argument!
