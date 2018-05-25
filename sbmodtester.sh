@@ -2,11 +2,10 @@
 #---TODO---
 #Graphical interface option
 #macOS support
-#Clean up whatever is in the end of the last if statement
 
 #Change these variables (without removing quotes) to change the Steam and Starbound directories, respectively.
-STEAM_DIR="$HOME/.local/share/Steam"
-STARBOUND_DIR="$HOME/.local/share/Steam/steamapps/common/Starbound"
+STEAM_DIR="$HOME/.steam/steam"
+STARBOUND_DIR="$HOME/.steam/steam/steamapps/common/Starbound"
 
 HELP=""
 CLEANUP=""
@@ -16,7 +15,7 @@ WORKING_DIR="$PWD"
 TITLE="\033[0;92m[SBMT]\033[0m:"
 ERR_TITLE="\033[0;92m[SBMT]\033[0m: \e[31mERROR\e[0m:"
 ERR_HELP="$TITLE Need help? Use --help or -h."
-VER="0.5.1"
+VER="0.5.2"
 
 updatefromgit () {
   printf "$TITLE Checking for an update...\n"
@@ -79,7 +78,7 @@ updatefromgit () {
         local download_exitstatus=$? #Catch wget's exit status since the file might not have been downloaded correctly
         if [[ $download_exitstatus == 0 ]]; then
           printf "$TITLE Download complete! Replacing old version with new.\n"
-          echo -e '#!/bin/bash\nrm $1\nmv sbmodtester.tmp.sh sbmodtester.sh\nchmod +x sbmodtester.sh\nrm handover.sh' >> handover.sh  #Create a handover to replace versions, then self-destruct
+          echo -e '#!/bin/bash\nrm $1\nmv sbmodtester.tmp.sh $1\nchmod +x $1\nrm handover.sh' >> handover.sh  #Create a handover to replace versions, then self-destruct
           chmod +x handover.sh
           ./handover.sh "$(basename "$0")" #Using basename $0 as the user might have changed the name of sbmodtester
           printf "\033[0;92m[SBMT]\033[0m: Update complete!\n"
@@ -159,37 +158,37 @@ showhelp () {
   printf "Welcome to Starbound Mod Tester Version $VER!\r
 Usage: $0 [ARGUMENTS] [TARGET FOLDER NAME(S)]\n
 ---ARGUMENTS---
-	  -c | --cleanup
-	      Forces a cleanup. This deletes all *.tmp.pak files from Starbound's mod
-	      folder and is run automatically after closing Starbound client-side.
-	  --force-starbound [STARBOUND ROOT FOLDER]
-	      Forces the Starbound directory to whatever comes after it. If you use
-	      'linux_default,' it will use the default Linux Steam Starbound
-	      installation directory.
-	  --force-steam [STEAM ROOT FOLDER]
-	      Forces the Steam directory to whatever comes after it. Similarly, if
-	      you use 'linux_default,' it will use the default Linux Steam
-	      installation directory.
-	  -h | --help
-	      Displays this help message.
-	  -nb | --no-build
-	      Skips all mod building and runs Starbound.
-	  -nc | --no-cleanup
-	      Turns off mod cleanup after Starbound is finished. This is automatically
-	      applied when using the argument '--server.'
+    -c | --cleanup
+        Forces a cleanup. This deletes all *.tmp.pak files from Starbound's mod
+        folder and is run automatically after closing Starbound client-side.
+    --force-starbound [STARBOUND ROOT FOLDER]
+        Forces the Starbound directory to whatever comes after it. If you use
+        'linux_default,' it will use the default Linux Steam Starbound
+        installation directory. Using 'old_linux_default' sets SMT to use
+        '/home/USER/.local/share/Steam/steamapps/common/Starbound'.
+    --force-steam [STEAM ROOT FOLDER]
+        Forces the Steam directory to whatever comes after it.
+        The 'linux_default' and 'old_linux_default' options also work with this.
+    -h | --help
+        Displays this help message.
+    -nb | --no-build
+        Skips all mod building and runs Starbound.
+    -nc | --no-cleanup
+        Turns off mod cleanup after Starbound is finished. This is automatically
+        applied when using the argument '--server.'
     -nv | --no-version-check
         Turns off automatic version checking after SMT finishes. Turn this off
         if you don't feel like checking for updates every time you run SMT.
-	  --server
-	      Runs Starbound's dedicated server instead of client-side. When server
-	      mode is on, SMT does not automatically cleanup.
-	  -u | --update
-	      Checks for an update and/or updates SMT from Github.
-	  -v | --version
-	      Returns SMT's version.
-	  -w | --enable-workshop-mods
-	      Copys over workshop mods to the Starbound mod folder. This only applies
-	      if you have the Steam version of Starbound installed.
+    --server
+        Runs Starbound's dedicated server instead of client-side. When server
+        mode is on, SMT does not automatically cleanup.
+    -u | --update
+        Checks for an update and/or updates SMT from Github.
+    -v | --version
+        Returns SMT's version.
+    -w | --enable-workshop-mods
+        Copys over workshop mods to the Starbound mod folder. This only applies
+        if you have the Steam version of Starbound installed.
 
 ---EXTRA NOTES---
 Returning the command with no arguments will default to pack a mod in the
@@ -210,20 +209,28 @@ while [[ $# -gt 0 ]]; do
       ;;
     --force-starbound )
       shift
-      if [[ "$1" == "linux_default" ]]; then
-          STARBOUND_DIR="$HOME/.local/share/Steam/steamapps/common/Starbound"
-      else
+      case $1 in
+        linux_default )
+          STARBOUND_DIR="$HOME/.steam/steam/steamapps/common/Starbound"
+          ;;
+        old_linux_default )
+          STEAM_DIR="$HOME/.local/share/Steam/steamapps/common/Starbound"
+        * )
           STARBOUND_DIR="$1"
-      fi
-      shift
-      ;;
+          ;;
+      esac
     --force-steam )
       shift
-      if [[ "$1" == "linux_default" ]]; then
+      case $1 in
+        linux_default )
+          STEAM_DIR="$HOME/.steam/steam"
+          ;;
+        old_linux_default )
           STEAM_DIR="$HOME/.local/share/Steam"
-      else
+        * )
           STEAM_DIR="$1"
-      fi
+          ;;
+      esac
       shift
       ;;
     -h | --help )
@@ -335,11 +342,7 @@ elif [[ ! -z "$SELECT_DIR" ]]; then
 elif [[ ! -d "$PWD/testing" ]] && [[ $# == 0 ]]; then
   printf "$ERR_TITLE Child folder 'testing' in parent directory '$PWD' not found since folder argument not passed.\n$ERR_HELP \n"
 else
-  if [[ $# -gt 0 ]]; then
-    #Do nothing so that the error message doesn't pop up when doing these
-    #TODO: Deprecate this in the future.
-    printf ""
-  else
+  if [[ ! $# -gt 0 ]]; then #Worst case scenario where everything goes wrong
     printf "$ERR_TITLE Something went very wrong with directory parsing. Check the command line.\n"
   fi
 fi
@@ -347,7 +350,7 @@ fi
 #Check for updates every time SMT is used
 if [[ "$VERSIONCHECK" != "no_version_check" ]]; then
   ping -q -c 1 -W 1 8.8.8.8 >/dev/null #Ping a Google server. This probably won't work if you live in a country where Google is blocked (but I'd assume that you wouldn't be playing Starbound, either)
-  ping_exitstatus=$? #You know I like catching the exit status...
+  ping_exitstatus=$? #This is probably unnecessary, but I'm doing it anyway
   if [[ $ping_exitstatus == 0 ]]; then #We're not going to attempt an update if the internet's not on.
     git_ver=$(wget -q -O - -T 30 https://raw.githubusercontent.com/PistolRcks/starboundmodtester/master/VERSION)
     if [[ "$git_ver" != "$VER" ]]; then

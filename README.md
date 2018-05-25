@@ -25,21 +25,11 @@ SMT takes optional arguments before build targets. All arguments are as follows:
 #### -c or --cleanup
 Forces a cleanup all of `*.tmp.pak` files created by SMT in the selected Starbound's mod folder.
 #### --force-starbound [STARBOUND_ROOT_DIR]
-Forces the Starbound directory to whatever comes after it. If you use `linux_default`, it will use the default Linux Steam Starbound installation directory.
+Forces the Starbound directory to whatever comes after it. If you use `linux_default`, it will use the default Linux Steam Starbound installation directory. You may also use `old_linux_default`, which will set SMT to use the old Steam folder structure (`/home/USER/.local/share/Steam/steamapps/common/Starbound`).
 #### --force-steam [STEAM_ROOT_DIR]
-Forces the Steam directory to whatever comes after it. Similarly to `--force-starbound`, if you use `linux_default`, it will use the default Linux Steam installation directory.
+Forces the Steam directory to whatever comes after it. The `linux_default` and `old_linux_default` options may also be used here.
 #### -h or --help
 Shows a simple help dialogue.
-#### -l or --literal (Deprecated in 0.5. Literal naming is automatic now.)
-Uses literal folder locations instead of folder names. Take, for example, this command.
-
-`./sbmodtester.sh fooA`
-
-This will look for the folder `fooA` in the current folder of SMT (`$PWD`). When using literal naming, folders can be used from anywhere, ignoring SMT's position. So the original command changes to:
-
-`./sbmodtester.sh --literal /home/example/path-to-folder/fooA`
-
-Both commands will output the same result, assuming that SMT is placed in `/home/example/path-to-folder/`. The advantage to using literal naming is flexibility. For example, you could use a pre-defined variable, or a folder outside of SMT's location, or multiple folders within one folder.
 #### -nb or --no-build
 Skips the build phase and goes straight to starting Starbound.
 #### -nc or --no-cleanup

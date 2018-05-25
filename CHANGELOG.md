@@ -1,3 +1,14 @@
+## 0.5.2
+### What's New?
++ Added option for using old Steam folders with `--force-steam` and `--force-starbound`. Use `old_linux_default` to access these.
+### What's Changed?
+* Changed folder defaults to the newer version
+### What's Fixed?
+* Fixed help message justification
+* Handover wouldn't replace update keeping the name of sbmodtester (or whatever it was named to)
+### What's Removed?
+- Cleaned up whatever was in the end of the last if statement (maybe)
+- Removed the `--literal` help section from README.md
 ## 0.5.1
 ### What's New?
 + Added a changelog viewer to the update function, complete with Markdown support! This was the hardest thing to do.
