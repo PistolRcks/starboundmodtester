@@ -15,7 +15,7 @@ WORKING_DIR="$PWD"
 TITLE="\033[0;92m[SBMT]\033[0m:"
 ERR_TITLE="\033[0;92m[SBMT]\033[0m: \e[31mERROR\e[0m:"
 ERR_HELP="$TITLE Need help? Use --help or -h."
-VER="0.5.2"
+VER="0.5.2.1"
 
 updatefromgit () {
   printf "$TITLE Checking for an update...\n"
@@ -26,7 +26,7 @@ updatefromgit () {
   else
     if [[ "$git_ver" != "$VER" ]]; then
       local headername="## $git_ver"
-      printf "Downloading changelog...\n"
+      printf "$TITLE Downloading changelog...\n"
       wget -q -O "changelog.tmp.md" -T 15 https://raw.githubusercontent.com/PistolRcks/starboundmodtester/master/CHANGELOG.md #It would be much too silly to put the entire changelog into a variable, so we won't
       local changelog_exitstatus=$? #Catch the exit status
       printf "$TITLE Local version does not match Github version! Local version is \e[1m$VER\e[0m, while Github version is \e[1m$git_ver\e[0m.\n"
@@ -215,6 +215,7 @@ while [[ $# -gt 0 ]]; do
           ;;
         old_linux_default )
           STEAM_DIR="$HOME/.local/share/Steam/steamapps/common/Starbound"
+          ;;
         * )
           STARBOUND_DIR="$1"
           ;;
@@ -227,6 +228,7 @@ while [[ $# -gt 0 ]]; do
           ;;
         old_linux_default )
           STEAM_DIR="$HOME/.local/share/Steam"
+          ;;
         * )
           STEAM_DIR="$1"
           ;;
