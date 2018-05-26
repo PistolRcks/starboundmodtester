@@ -220,6 +220,7 @@ while [[ $# -gt 0 ]]; do
           STARBOUND_DIR="$1"
           ;;
       esac
+      ;;
     --force-steam )
       shift
       case $1 in

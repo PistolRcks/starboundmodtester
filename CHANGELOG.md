@@ -1,3 +1,7 @@
+## 0.5.2.2
+### What's Fixed?
+* Missed two more semicolons.
+
 ## 0.5.2.1
 ### What's Fixed?
 * Missed four semicolons.
