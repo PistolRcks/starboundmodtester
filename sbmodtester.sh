@@ -15,7 +15,7 @@ WORKING_DIR="$PWD"
 TITLE="\033[0;92m[SBMT]\033[0m:"
 ERR_TITLE="\033[0;92m[SBMT]\033[0m: \e[31mERROR\e[0m:"
 ERR_HELP="$TITLE Need help? Use --help or -h."
-VER="0.5.2.1"
+VER="0.5.2.2"
 
 updatefromgit () {
   printf "$TITLE Checking for an update...\n"
