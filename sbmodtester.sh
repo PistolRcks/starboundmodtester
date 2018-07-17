@@ -15,7 +15,7 @@ WORKING_DIR="$PWD"
 TITLE="\033[0;92m[SBMT]\033[0m:"
 ERR_TITLE="\033[0;92m[SBMT]\033[0m: \e[31mERROR\e[0m:"
 ERR_HELP="$TITLE Need help? Use --help or -h."
-VER="0.5.2.2"
+VER="0.5.2.3"
 
 updatefromgit () {
   printf "$TITLE Checking for an update...\n"
@@ -324,7 +324,7 @@ if [[ "$NO_BUILD" == "no_build" ]]; then
     "$STARBOUND_DIR/linux/run-client.sh" ; cleanup
   fi
 #Check if user passes nothing, and the "testing" directory exists. If so, run.
-elif [[ -d "$PWD/testing" ]] && [[ -z "$SELECT_DIR" ]]; then
+elif [[ -d "$PWD/testing" ]] && [[ -z "$SELECT_DIR" ]] && [[ $# == 0 ]]; then
   printf "$TITLE Initiating build phase...\n"
   sbbuild "$PWD/testing" run ; cleanup
 #Check if user passed something for a directory. If so, run all arguments in sequential order.
@@ -357,7 +357,7 @@ if [[ "$VERSIONCHECK" != "no_version_check" ]]; then
   if [[ $ping_exitstatus == 0 ]]; then #We're not going to attempt an update if the internet's not on.
     git_ver=$(wget -q -O - -T 30 https://raw.githubusercontent.com/PistolRcks/starboundmodtester/master/VERSION)
     if [[ "$git_ver" != "$VER" ]]; then
-      printf "$TITLE There is a new update available! Use the '--update' variable to run it!"
+      printf "$TITLE There is a new update available! Use the '--update' variable to run it!\n"
     fi
   fi
 fi
