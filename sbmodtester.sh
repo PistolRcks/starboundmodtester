@@ -15,7 +15,7 @@ WORKING_DIR="$PWD"
 TITLE="\033[0;92m[SBMT]\033[0m:"
 ERR_TITLE="\033[0;92m[SBMT]\033[0m: \e[31mERROR\e[0m:"
 ERR_HELP="$TITLE Need help? Use --help or -h."
-VER="0.5.2.3"
+VER="0.5.2.4"
 
 updatefromgit () {
   printf "$TITLE Checking for an update...\n"
@@ -220,6 +220,7 @@ while [[ $# -gt 0 ]]; do
           STARBOUND_DIR="$1"
           ;;
       esac
+      shift
       ;;
     --force-steam )
       shift
